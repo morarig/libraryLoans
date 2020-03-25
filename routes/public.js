@@ -79,10 +79,8 @@ router.get('/validate/:user/:token', async ctx => {
 })
 
 router.get('/login', async ctx => {
-	const data = {}
-	if(ctx.query.msg) data.msg = ctx.query.msg
-	if(ctx.query.user) data.user = ctx.query.user
-	await ctx.render('login', data)
+	console.log(ctx.hbs)
+	await ctx.render('login', ctx.hbs)
 })
 
 router.post('/login', koaBody, async ctx => {
@@ -92,7 +90,8 @@ router.post('/login', koaBody, async ctx => {
 		const body = ctx.request.body
 		await user.login(body.user, body.pass)
 		ctx.session.authorised = true
-		return ctx.redirect('/secure?msg=you are now logged in...')
+		const referrer = body.referrer || '/secure'
+		return ctx.redirect(`${referrer}?msg=you are now logged in...`)
 	} catch(err) {
 		ctx.hbs.msg = err.message
 		await ctx.render('login', ctx.hbs)

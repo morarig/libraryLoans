@@ -12,15 +12,25 @@
 	<body>
 		<header>
 		<h1>Create an Account</h1>
+		<a href="/login">Log in</a>
 		</header>
 		{{#if msg}}
  			<p class="msg">{{msg}}</p>
 		{{/if}}
 		<main>
 		<form action="/register" enctype="multipart/form-data" method="post">
-			<p>Username:<br /><input type="text" name="user" placeholder="your preferred username (no spaces)" value=""></p>
-			<p>Password:<br /><input type="password" name="pass" placeholder="your chosen password" value=""></p>
-			<p>Email:<br /><input type="email" name="email" placeholder="a valid email address" value=""></p>
+			<p>
+				<label for="user">Username</label><br />
+				<input type="text" name="user" placeholder="your preferred username (no spaces)" value="">
+			</p>
+			<p>
+				<label for="pass">Password</label><br />
+				<input type="password" name="pass" placeholder="your chosen password" value="">
+			</p>
+			<p>
+				<label for="email">Email</label><br />
+				<input type="email" name="email" placeholder="a valid email address" value="">
+			</p>
 			<p><input type="submit" value="Create"></p>
 		</form>
 		</main>
