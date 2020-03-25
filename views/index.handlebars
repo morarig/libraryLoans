@@ -13,10 +13,10 @@
 		<header>
 			<h1>Home</h1>
 			{{#if authorised}}
-			<a href="/logout">log out</a>
-		{{else}}
-			<a href="/login">log in</a>
-		{{/if}}
+				<a href="/logout">log out</a>
+			{{else}}
+				<a href="/login">log in</a>
+			{{/if}}
 		</header>
 		{{#if msg}}
  			<p class="msg">{{msg}}</p>
