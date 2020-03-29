@@ -9,6 +9,7 @@
 	"scripts": {
 		"coverage": "./node_modules/.bin/jest --coverage 'unitTests/' && ./node_modules/.bin/istanbul check-coverage --statement 100 --branch 100 --function 100 --line 100",
 		"cucumber": "node_modules/.bin/cucumber-js ./cucumber/features -r ./cucumber/steps",
+		"packagedeps": "./node_modules/.bin/depcheck .",
 		"dependency": "./node_modules/.bin/dependency-check -i bcrypt --unused --no-dev . && node_modules/.bin/dependency-check --missing .",
 		"start": "node index.js",
 		"jsdoc": "node_modules/.bin/jsdoc -c jsdoc.conf",
@@ -25,15 +26,19 @@
 		"koa-body": "^4.0.8",
 		"koa-bodyparser": "^4.2.1",
 		"koa-router": "^7.4.0",
+		"koa-send": "^5.0.0",
 		"koa-session": "^5.10.1",
 		"koa-static": "^5.0.0",
 		"koa-views": "^6.1.5",
+		"mime-types": "^2.1.26",
 		"nodemailer-promise": "^2.0.0",
+		"sharp": "^0.25.2",
 		"sqlite-async": "^1.0.12"
 	},
 	"devDependencies": {
 		"coverage": "^0.4.1",
 		"cucumber": "^6.0.5",
+		"depcheck": "^0.9.2",
 		"dependency": "0.0.1",
 		"dependency-check": "^4.1.0",
 		"eslint": "^5.15.2",
