@@ -12,6 +12,8 @@ describe('register()', () => {
 		done()
 	})
 
+	//sdasdsadadasdasdsad
+
 	test('register a duplicate username', async done => {
 		expect.assertions(1)
 		const account = await new Accounts()
