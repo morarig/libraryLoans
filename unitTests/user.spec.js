@@ -1,4 +1,3 @@
-
 const Accounts = require('../modules/user.js')
 
 describe('register()', () => {
@@ -57,7 +56,7 @@ describe('register()', () => {
 		expect.assertions(1)
 		const account = await new Accounts()
 		await expect(account.register('bondj', 'p455w0rd', 'doej@gmail.com', 3))
-			.rejects.toEqual(Error ('usertype is invalid'))
+			.rejects.toEqual(Error('usertype is invalid'))
 		done()
 	})
 })
@@ -83,7 +82,6 @@ describe('generateToken()', () => {
 	test('should generate a valid token', async done => {
 		expect.assertions(1)
 		const account = await new Accounts()
-		const string = new String('sdasdsa')
 		await account.register('doej', 'password', 'doej@yahoo.com', 0)
 		const token = await account.generateToken('doej', Math.floor(Date.now() / 1000))
 		expect(typeof token).toEqual('string')
@@ -220,7 +218,7 @@ describe('updateCharge()', () => {
 		done()
 	})
 
-	test ('set charge for an inexistent user', async done => {
+	test('set charge for an inexistent user', async done => {
 		expect.assertions(1)
 		const account = await new Accounts()
 		await expect( account.updateCharge(1, '0.5'))
@@ -228,20 +226,20 @@ describe('updateCharge()', () => {
 		done()
 	})
 
-	test ('charge is empty string', async done => {
+	test('charge is empty string', async done => {
 		expect.assertions(1)
 		const account = await new Accounts()
 		await account.register('doej', 'password', 'doej@yahoo.com', 0)
-		await expect (account.updateCharge(1, ''))
+		await expect(account.updateCharge(1, ''))
 			.rejects.toEqual( Error('charge is invalid'))
 		done()
 	})
 
-	test ('charge is a string', async done => {
+	test('charge is a string', async done => {
 		expect.assertions(1)
 		const account = await new Accounts()
 		await account.register('doej', 'password', 'doej@yahoo.com', 0)
-		await expect (account.updateCharge(1, 'abc'))
+		await expect(account.updateCharge(1, 'abc'))
 			.rejects.toEqual( Error('charge is invalid'))
 		done()
 	})
