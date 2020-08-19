@@ -12,8 +12,6 @@ describe('register()', () => {
 		done()
 	})
 
-	//sdasdsadadasdasdsad
-
 	test('register a duplicate username', async done => {
 		expect.assertions(1)
 		const account = await new Accounts()
@@ -201,4 +199,41 @@ describe('login()', () => {
 		done()
 	})
 
+})
+
+describe('updateCharge()', () => {
+	test('set the charge of a user', async done => {
+		expect.assertions(1)
+		const account = await new Accounts()
+		await account.register('doej', 'password')
+		const updated = await account.updateCharge(1, '0.5')
+		expect(updated).toBe(true)
+		done()
+	})
+
+	test ('set charge for an inexistent user', async done => {
+		expect.assertions(1)
+		const account = await new Accounts()
+		await expect( account.updateCharge(1, '0.5'))
+			.rejects.toEqual( Error('user does not exist'))
+		done()
+	})
+
+	test ('charge is empty string', async done => {
+		expect.assertions(1)
+		const account = await new Accounts()
+		await account.register('doej', 'abfgjk')
+		await expect (account.updateCharge(1, ''))
+			.rejects.toEqual( Error('charge is invalid'))
+		done()
+	})
+
+	test ('charge is a string', async done => {
+		expect.assertions(1)
+		const account = await new Accounts()
+		await account.register('doej', 'abfgjk')
+		await expect (account.updateCharge(1, 'abc'))
+			.rejects.toEqual( Error('charge is invalid'))
+		done()
+	})
 })
