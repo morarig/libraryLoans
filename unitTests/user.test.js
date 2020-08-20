@@ -14,8 +14,8 @@ describe('register()', () => {
 	test('register a duplicate username', async done => {
 		expect.assertions(1)
 		const account = await new Accounts()
-		await account.register('doej', 'password', 'doej@gmail.com')
-		await expect( account.register('doej', 'password', 'doej@gmail.com', 0) )
+		await account.register('doej', 'password', 'doej@gmail.com', 0)
+		await expect(account.register('doej', 'password', 'doej@gmail.com', 0) )
 			.rejects.toEqual( Error('username "doej" already in use') )
 		account.tearDown()
 		done()
@@ -226,12 +226,21 @@ describe('updateCharge()', () => {
 		done()
 	})
 
+	test('set charge for an invalid user', async done => {
+		expect.assertions(1)
+		const account = await new Accounts()
+		await account.register('doej', 'password', 'doej@yahoo.com', 0)
+		await expect( account.updateCharge('abc', '0.5'))
+			.rejects.toEqual( Error('invalid input'))
+		done()
+	})
+
 	test('charge is empty string', async done => {
 		expect.assertions(1)
 		const account = await new Accounts()
 		await account.register('doej', 'password', 'doej@yahoo.com', 0)
 		await expect(account.updateCharge(1, ''))
-			.rejects.toEqual( Error('charge is invalid'))
+			.rejects.toEqual( Error('invalid input'))
 		done()
 	})
 
@@ -240,7 +249,36 @@ describe('updateCharge()', () => {
 		const account = await new Accounts()
 		await account.register('doej', 'password', 'doej@yahoo.com', 0)
 		await expect(account.updateCharge(1, 'abc'))
-			.rejects.toEqual( Error('charge is invalid'))
+			.rejects.toEqual( Error('invalid input'))
+		done()
+	})
+})
+
+describe('checkUser()', () => {
+
+	test('check if the id is a number', async done => {
+		expect.assertions(1)
+		const account = await new Accounts()
+		await account.register('doej', 'password', 'doej@yahoo.com', 0)
+		await expect(account.checkUser('abc'))
+			.rejects.toEqual( Error('id is not a number'))
+		done()
+	})
+
+	test('check id for existing user', async done => {
+		expect.assertions(1)
+		const account = await new Accounts()
+		await account.register('doej', 'password', 'doej@yahoo.com', 0)
+		const checked = await account.checkUser(1)
+		expect(checked).toBe(true)
+		done()
+	})
+
+	test('check id for inexisting user', async done => {
+		expect.assertions(1)
+		const account = await new Accounts()
+		const checked = await account.checkUser(1)
+		expect(checked).toBe(false)
 		done()
 	})
 })

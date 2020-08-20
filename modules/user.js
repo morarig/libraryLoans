@@ -15,7 +15,7 @@ module.exports = class User {
 			this.db = await sqlite.open(dbName)
 			// we need this table to store the user accounts
 			const sql = 'CREATE TABLE IF NOT EXISTS users\
-				(id INTEGER PRIMARY KEY AUTOINCREMENT, user TEXT, pass TEXT, email TEXT,\
+				(id INTEGER PRIMARY KEY AUTOINCREMENT, user TEXT, pass TEXT, email TEXT, usertype INTEGER, charge TEXT,\
 					token TEXT, timestamp INTEGER, validated INTEGER DEFAULT 0);'
 			await this.db.run(sql)
 			return this
@@ -28,10 +28,12 @@ module.exports = class User {
 	 * @param {String} pass the chosen password
 	 * @returns {Boolean} returns true if the new user has been added
 	 */
-	async register(user, pass, email) {
+	// eslint-disable-next-line complexity
+	async register(user, pass, email, usertype) {
 		Array.from(arguments).forEach( val => {
 			if(val.length === 0) throw new Error('missing field')
 		})
+		if(!isNaN(usertype) && !(parseInt(usertype) === 0 || parseInt(usertype) === 1)) throw new Error('usertype is invalid')
 		let sql = `SELECT COUNT(id) as records FROM users WHERE user="${user}";`
 		const data = await this.db.get(sql)
 		if(data.records !== 0) throw new Error(`username "${user}" already in use`)
@@ -39,7 +41,7 @@ module.exports = class User {
 		const emails = await this.db.get(sql)
 		if(emails.records !== 0) throw new Error(`email address "${email}" is already in use`)
 		pass = await bcrypt.hash(pass, saltRounds)
-		sql = `INSERT INTO users(user, pass, email) VALUES("${user}", "${pass}", "${email}")`
+		sql = `INSERT INTO users(user, pass, email, usertype, charge) VALUES("${user}", "${pass}", "${email}", ${usertype}, '0.00')`
 		await this.db.run(sql)
 		return true
 	}
@@ -138,6 +140,30 @@ module.exports = class User {
 	 */
 	async validateAccount(username) {
 		const sql = `UPDATE users SET validated = 1 WHERE user = "${username}"`
+		await this.db.run(sql)
+		return true
+	}
+
+	async updateCharge(id, charge) {
+		Array.from(arguments).forEach(e => {
+			if (e === "" || e === undefined || isNaN(e)) throw new Error(`invalid input`)
+		})
+		let sql = `SELECT count(id) as records FROM users WHERE id = ${id}`
+		let data = await this.db.get(sql)
+		if (data.records === 0) throw new Error('user does not exist')
+		sql = `SELECT charge FROM users WHERE id = ${id}`
+		data = await this.db.get(sql)
+		charge = parseFloat(charge) + parseFloat(data.charge)
+		sql = `UPDATE users SET charge = ${charge.toString()}`
+		await this.db.run(sql)
+		return true
+	}
+
+	async checkUser(id) {
+		if(isNaN(id)) throw new Error('id is not a number')
+		let sql = `SELECT count(id) as records FROM users WHERE id = ${id}`
+		let data = await this.db.get(sql)
+		if(data.records === 0) return false
 		await this.db.run(sql)
 		return true
 	}
