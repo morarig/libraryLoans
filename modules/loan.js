@@ -1,6 +1,5 @@
 /* eslint-disable space-before-blocks */
 const sqlite = require('sqlite-async')
-const config = require('../config.json')
 
 module.exports = class Loan {
 
