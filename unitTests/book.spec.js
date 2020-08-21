@@ -5,7 +5,6 @@ describe('updateCount()', () => {
 	test( 'the ISBN is invalid', async done => {
 		expect.assertions(1)
 		const book = await new Books()
-		await book.createLoan(1, 1)
 		await expect(book.updateCount('abc', 1))
 			.rejects.toEqual( Error('invalid input'))
 		done()
@@ -14,7 +13,6 @@ describe('updateCount()', () => {
 	test('the returned flag is invalid', async done => {
 		expect.assertions(1)
 		const book = await new Books()
-		await book.createLoan(1, 1)
 		await expect(book.updateCount(1, 2))
 			.rejects.toEqual( Error('invalid input'))
 		done()
@@ -23,7 +21,7 @@ describe('updateCount()', () => {
 	test('updated count for a book', async done => {
 		expect.assertions(1)
 		const book = await new Books()
-		await book.createLoan(1, 1)
+		await book.createBook('abc', 'abc', 1, 3)
 		const updated = await book.updateCount(1, 1)
 		expect(updated).toBe(true)
 		done()
@@ -36,7 +34,7 @@ describe('createBook', () => {
 		expect.assertions(1)
 		const book = await new Books()
 		await expect(book.createBook(1, 'abc', 1, 1))
-			.rejects.toEqual( Error('title type is invalid'))
+			.rejects.toEqual( Error('invalid input'))
 		done()
 	})
 
@@ -44,7 +42,7 @@ describe('createBook', () => {
 		expect.assertions(1)
 		const book = await new Books()
 		await expect(book.createBook('', 'abc', 1, 1))
-			.rejects.toEqual( Error('empty title string'))
+			.rejects.toEqual( Error('invalid input'))
 		done()
 	})
 
@@ -60,7 +58,7 @@ describe('createBook', () => {
 		expect.assertions(1)
 		const book = await new Books()
 		await expect(book.createBook('abc', '', 1, 1))
-			.rejects.toEqual( Error('empty picture string'))
+			.rejects.toEqual( Error('invalid input'))
 		done()
 	})
 
@@ -76,7 +74,7 @@ describe('createBook', () => {
 		expect.assertions(1)
 		const book = await new Books()
 		await expect(book.createBook('abc', 'abc', undefined, 1))
-			.rejects.toEqual( Error(' empty ISBN input'))
+			.rejects.toEqual( Error('invalid input'))
 		done()
 	})
 
@@ -88,19 +86,11 @@ describe('createBook', () => {
 		done()
 	})
 
-	test('count of a book is zero', async done => {
-		expect.assertions(1)
-		const book = await new Books()
-		await expect(book.createBook('abc', 'abc', 1, 0))
-			.rejects.toEqual( Error('count must be minimum 1'))
-		done()
-	})
-
 	test('empty count number', async done => {
 		expect.assertions(1)
 		const book = await new Books()
 		await expect(book.createBook('abc', 'abc', 1, undefined))
-			.rejects.toEqual( Error('empty count input'))
+			.rejects.toEqual( Error('invalid input'))
 		done()
 	})
 })
@@ -138,7 +128,22 @@ describe('remove', () => {
 		expect.assertions(1)
 		const book = await new Books()
 		await expect(book.remove(''))
-			.rejects.toEqual( Error('empty ISBN input'))
+			.rejects.toEqual( Error('invalid input'))
+		done()
+	})
+})
+
+describe('checkCount()', () => {
+
+	test( 'check if book is available', async done => {
+		expect.assertions(2)
+		const book = await new Books()
+		await book.createBook('abc', 'abc', 1, 0)
+		let counted = await book.checkCount(1, 1)
+		expect(counted).toBe(0)
+		await book.createBook('abc', 'abc', 2, 1)
+		counted = await book.checkCount(2)
+		expect(counted).toBe(1)
 		done()
 	})
 })
