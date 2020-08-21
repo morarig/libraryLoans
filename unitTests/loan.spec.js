@@ -19,13 +19,13 @@ describe('createLoan()', () => {
 	})
 })
 
-describe('return()', () => {
+describe('returned()', () => {
 
 	test('return a book with invalid ISBN', async done => {
 		expect.assertions(1)
 		const loan = await new Loans()
 		await loan.createLoan(1, 1)
-		await expect(loan.return(1, 'abc'))
+		await expect(loan.returned(1, 'abc'))
 			.rejects.toEqual( Error('invalid input'))
 		done()
 	})
@@ -34,7 +34,7 @@ describe('return()', () => {
 		expect.assertions(1)
 		const loan = await new Loans()
 		await loan.createLoan(1, 1)
-		await expect(loan.return('abc', 1))
+		await expect(loan.returned('abc', 1))
 			.rejects.toEqual( Error('invalid input'))
 		done()
 	})
@@ -56,7 +56,7 @@ describe('getLoans', () => {
 		await loan.createLoan(1, 1)
 		await loan.createLoan(1, 2)
 		const allLoans = await loan.getLoans(1)
-		expect(allLoans.count).toBe(2)
+		expect(allLoans.length).toBe(2)
 		done()
 	})
 })
