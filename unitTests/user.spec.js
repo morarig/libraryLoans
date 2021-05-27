@@ -12,7 +12,7 @@ describe('register()', () => {
 		done()
 	})
 
-	//sdasdsadadasdasdsad
+	//unit testing
 
 	test('register a duplicate username', async done => {
 		expect.assertions(1)
